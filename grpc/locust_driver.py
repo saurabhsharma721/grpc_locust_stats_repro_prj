@@ -12,7 +12,12 @@ spawn_rate = 10
 test_run_time = 30
 print(f"user_count {user_count},spawn_rate {spawn_rate},test_run_time {test_run_time}")
 # Using local runner in start
-env.create_local_runner()
+runner = env.create_local_runner()
+
+### Perform global setup
+for cls in env.user_classes:
+    cls.perform_global_setup() # Is it correct approach?
+
 #CSV writer
 
 stats_path = os.path.join(os.getcwd(), "result")
@@ -35,6 +40,9 @@ print(f"locust test have started running")
 gevent.spawn_later(test_run_time, lambda: env.runner.quit())
 
 env.runner.greenlet.join()
+### Perform global teardown
+for cls in env.user_classes:
+    cls.perform_global_teardown() # Is it correct approach?
 print(f"locust test have completed running")
 print(f"Test run completed.")
 print(f"requests after run : {env.stats.num_requests}")

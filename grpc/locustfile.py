@@ -73,6 +73,14 @@ class HelloGrpcUser(GrpcUser):
     host = "localhost:50051"
     stub_class = hello_pb2_grpc.HelloServiceStub
 
+    @classmethod
+    def perform_global_setup(cls):
+        print("Perform global setup to create a global state")
+
+    @classmethod
+    def perform_global_teardown(cls):
+        print('Perform global teardown to clear the global state')
+
     @task
     def sayHello(self):
         if not self._channel_closed:
